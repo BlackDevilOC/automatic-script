@@ -2,25 +2,20 @@ name: Trigger Supabase Function Daily
 
 on:
   schedule:
-    # This cron expression means "run every minute"
-    # For testing, this is great. For production, you'll want to change it back.
-    - cron: '*/1 * * * *' # IMPORTANT: Change this back for production!
+    - cron: '*/1 * * * *' # Run every minute for testing
 
 jobs:
   trigger-function:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4 # Good practice to check out code, though not strictly needed for just curl
+        uses: actions/checkout@v4
 
       - name: Make HTTP Request to Supabase Edge Function
         run: |
-          # The 'run' command executes shell commands.
-          # We use 'curl' to make the HTTP GET request.
-          # -X GET specifies the HTTP method.
-          # -H adds a header.
-          # ${{ secrets.SUPABASE_ANON_KEY }} is how you access GitHub Secrets.
+          # The entire 'curl' command should be on a single logical line.
+          # The backslashes '\' are for line continuation in bash.
           curl -X GET \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZXF1eHB4Zm9ld2VqamNzYWdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MTczOTIsImV4cCI6MjA2MTQ5MzM5Mn0.5bMubfBJMBho7dS7Z_4BFwyOVW_45pOXukannFqZwTU" \
           -H "Content-Type: application/json" \
           "https://esequxpxfoewejjcsagm.supabase.co/functions/v1/check-subscription-status"
